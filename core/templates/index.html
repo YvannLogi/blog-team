@@ -1,0 +1,44 @@
+{% extends "master.html" %}
+
+{% block content %}
+<section class="mx-auto max-w-3xl px-6 py-16">
+
+    <header class="mb-12 flex items-end justify-between">
+        <div>
+            <p class="text-xs uppercase tracking-widest text-gray-400">Blog</p>
+            <h1 class="mt-2 text-4xl font-semibold tracking-tight">Latest posts</h1>
+        </div>
+        <a href="{% url 'blog:post-list' %}" class="text-sm text-gray-500 hover:text-black transition-colors">
+            View all →
+        </a>
+    </header>
+
+    {% if last_posts %}
+    <div class="divide-y divide-gray-100">
+        {% for lp in last_posts %}
+        <article class="group py-8">
+            <a href="{{ lp.get_absolute_url }}" class="block">
+
+                <p class="text-xs text-gray-400">
+                    <time datetime="{{ lp.created_at|date:'c' }}">{{ lp.created_at|date:"F j, Y" }}</time>
+                    · {{ lp.author_name }}
+                </p>
+
+                <h2 class="mt-2 text-xl font-medium tracking-tight group-hover:underline underline-offset-4">
+                    {{ lp.title }}
+                </h2>
+
+                <p class="mt-2 text-gray-500 leading-relaxed">
+                    {{ lp.content|truncatewords:20 }}
+                </p>
+
+            </a>
+        </article>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="py-16 text-center text-gray-400">No posts yet.</p>
+    {% endif %}
+
+</section>
+{% endblock %}
