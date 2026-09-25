@@ -24,7 +24,7 @@
 
   </head>
   <body>
-    <div class="content">
+    <div class="content flex min-h-screen flex-col">
         <header class="flex flex-wrap items-center justify-between gap-4 px-10 py-6">
             <nav class="flex flex-wrap items-center gap-4">
                 <a href="{% url 'core:index' %}" class="flex items-center gap-3">
@@ -52,11 +52,11 @@
                 {% endif %}
             </nav>
         </header>
-        <main class="main">
+        <main class="main flex-1">
             {% block content %}
             {% endblock %}
         </main>
-        <footer class="text-center text-gray-500 text-sm mt-20">
+        <footer class="text-center text-gray-500 text-sm mt-20 py-6">
          &copy; community - {% now 'd/m/Y' %}.
         </footer>
     </div>
