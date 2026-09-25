@@ -1,0 +1,64 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog User.</title>
+    <link rel="icon" type="image/png" href="{% static 'assets/blog-logo.png' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+        font-family: "Open Sans", sans-serif;
+      }  
+    </style>
+
+  </head>
+  <body>
+    <div class="content">
+        <header class="flex flex-wrap items-center justify-between gap-4 px-10 py-6">
+            <nav class="flex flex-wrap items-center gap-4">
+                <a href="{% url 'core:index' %}" class="flex items-center gap-3">
+                    <img src="{% static 'assets/blog-logo.png' %}" alt="Blog logo" class="h-10 w-20 rounded-md object-cover" />
+                    <!-- <span>Welcome, you can post your blog here.</span> -->
+                </a>
+                <a class="" href="{% url 'blog:create_post' %}">
+                  Post a blog
+                </a>
+                <a class="underline" href="{% url 'blog:post-list' %}">
+                  All Blogs
+                </a>
+            </nav>
+            <nav class="flex items-center gap-4 text-sm">
+                {% if user.is_authenticated %}
+                <span class="text-gray-500">Hi, {{ user.first_name }}</span>
+                <a class="hover:underline" href="{% url 'core:password_change' %}">Change password</a>
+                <form method="post" action="{% url 'core:logout' %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" class="cursor-pointer hover:underline">Log out</button>
+                </form>
+                {% else %}
+                <a class="hover:underline" href="{% url 'core:login' %}">Log in</a>
+                <a class="rounded-full bg-black px-4 py-1.5 text-white hover:bg-gray-800 transition-colors" href="{% url 'core:register' %}">Register</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main class="main">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <footer class="text-center text-gray-500 text-sm mt-20">
+         &copy; community - {% now 'd/m/Y' %}.
+        </footer>
+    </div>
+  </body>
+</html>

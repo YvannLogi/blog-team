@@ -1,0 +1,18 @@
+{% if form.non_field_errors %}
+<p class="text-sm text-red-600">{{ form.non_field_errors|join:", " }}</p>
+{% endif %}
+
+{% for field in form %}
+<div>
+    <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-900">
+        {{ field.label }}
+    </label>
+    {{ field }}
+
+    {% if field.errors %}
+    <p class="mt-2 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+    {% elif field.help_text %}
+    <div class="mt-2 text-xs text-gray-400">{{ field.help_text|safe }}</div>
+    {% endif %}
+</div>
+{% endfor %}
