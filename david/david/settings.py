@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import json
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,7 +29,10 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles", "django_browser_reload", "core",    "blog"]
+    "django.contrib.staticfiles",
+    "core",
+    "blog",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -36,11 +40,15 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django_browser_reload.middleware.BrowserReloadMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# Rechargement auto du navigateur : uniquement en local (DEBUG=True)
+if DEBUG:
+    INSTALLED_APPS += ["django_browser_reload"]
+    MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
 
 ROOT_URLCONF = "david.urls"
 
@@ -61,12 +69,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "david.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Base de données :
+#  - en local (DEBUG=True)       -> SQLite (fichier db.sqlite3)
+#  - en production (DEBUG=False) -> PostgreSQL via DATABASE_URL (Render)
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    if not os.getenv("DATABASE_URL"):
+        raise RuntimeError("DATABASE_URL est obligatoire quand DEBUG=False.")
+
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=600,       # garde la connexion ouverte 10 min (plus rapide)
+            conn_health_checks=True,
+            ssl_require=True,       # Render exige SSL
+        )
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {

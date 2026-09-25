@@ -1,17 +1,19 @@
 [project]
 name = "space-app"
 version = "0.1.0"
-description = "Add your description here"
+description = "Blog developers platform for sharing project and ideas."
 readme = "README.md"
 authors = [
     { name = "Davidwgit82", email = "davidyvwork082@gmail.com" }
 ]
 requires-python = ">=3.14"
 dependencies = [
+    "dj-database-url>=3.1.2",
     "django-browser-reload>=1.21.0",
     "django-forge-cli>=1.0.0",
     "gunicorn>=26.2.0",
     "pillow>=12.3.0",
+    "psycopg[binary]>=3.3.6",
     "pyotp>=2.10.0",
     "python-dotenv>=1.2.3",
     "whitenoise>=6.12.0",
