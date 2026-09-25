@@ -1,0 +1,25 @@
+[project]
+name = "space-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Davidwgit82", email = "davidyvwork082@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "django-browser-reload>=1.21.0",
+    "django-forge-cli>=1.0.0",
+    "gunicorn>=26.2.0",
+    "pillow>=12.3.0",
+    "pyotp>=2.10.0",
+    "python-dotenv>=1.2.3",
+    "whitenoise>=6.12.0",
+]
+
+[project.scripts]
+space-app = "space_app:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
