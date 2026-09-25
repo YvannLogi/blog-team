@@ -1,0 +1,33 @@
+{% if comment.is_active %}
+<div class="flex items-start justify-between gap-4">
+    <p class="text-xs text-gray-400">
+        <span class="font-medium text-gray-900">{{ comment.user.first_name|default:"Deleted user" }}</span>
+        · <time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d F Y, H:i" }}</time>
+        {% if comment.edited_at %}
+        · <span title="Edited on {{ comment.edited_at|date:'d F Y, H:i' }}">(edited)</span>
+        {% endif %}
+    </p>
+
+    {# Boutons visibles seulement pour l'auteur du commentaire #}
+    {% if user.is_authenticated and comment.user_id == user.id %}
+    <div class="flex items-center gap-3">
+    <a href="{% url 'blog:edit-comment' comment.pk %}" class="text-xs text-gray-400 hover:text-black transition-colors">
+        Edit
+    </a>
+    <form method="post" action="{% url 'blog:deactivate-comment' comment.pk %}"
+          onsubmit="return confirm('Delete this comment?');">
+        {% csrf_token %}
+        <button type="submit" class="cursor-pointer text-xs text-gray-400 hover:text-red-600 transition-colors">
+            Delete
+        </button>
+    </form>
+    </div>
+    {% endif %}
+</div>
+<div class="mt-1 text-gray-700 leading-relaxed">
+    {{ comment.content|linebreaksbr }}
+</div>
+{% else %}
+{# Commentaire désactivé : on cache l'auteur et le texte, mais on garde la place pour ses réponses #}
+<p class="text-sm italic text-gray-400">Comment deleted</p>
+{% endif %}

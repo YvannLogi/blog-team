@@ -1,0 +1,64 @@
+{% extends "master.html" %}
+
+{% block content %}
+<section class="mx-auto max-w-2xl px-6 py-16">
+
+    <header class="mb-10">
+        <p class="text-xs uppercase tracking-widest text-gray-400">Blog</p>
+        <h1 class="mt-2 text-4xl font-semibold tracking-tight">Write a post</h1>
+    </header>
+
+    {% if not user.is_authenticated %}
+    <p class="mb-10 border-l-2 border-gray-300 pl-4 text-sm text-gray-500">
+        You are posting anonymously. Your post will be reviewed before it is published.
+    </p>
+    {% endif %}
+
+    <form method="post" novalidate class="space-y-8">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <p class="text-sm text-red-600">{{ form.non_field_errors|join:", " }}</p>
+        {% endif %}
+
+        {% for field in form %}
+        <div>
+            {% if field.name == "categories" %}
+
+            <p class="mb-3 text-sm font-medium text-gray-900">{{ field.label }}</p>
+            <div class="flex flex-wrap gap-2">
+                {% for checkbox in field %}
+                <label for="{{ checkbox.id_for_label }}" class="flex cursor-pointer items-center gap-2 rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-600 hover:border-gray-400 has-[:checked]:border-black has-[:checked]:text-black transition-colors">
+                    {{ checkbox.tag }}
+                    <span>{{ checkbox.choice_label }}</span>
+                </label>
+                {% endfor %}
+            </div>
+
+            {% else %}
+
+            <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-medium text-gray-900">
+                {{ field.label }}
+            </label>
+            {{ field }}
+
+            {% endif %}
+
+            {% if field.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ field.errors|join:", " }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div class="flex items-center justify-between border-t border-gray-100 pt-8">
+            <a href="{% url 'blog:post-list' %}" class="text-sm text-gray-500 hover:text-black transition-colors">
+                Cancel
+            </a>
+            <button type="submit" class="rounded-full bg-black px-6 py-2 text-sm text-white hover:bg-gray-800 transition-colors">
+                Publish
+            </button>
+        </div>
+    </form>
+
+</section>
+{% endblock %}

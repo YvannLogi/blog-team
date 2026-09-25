@@ -1,0 +1,23 @@
+{% extends "master.html" %}
+
+{# Gabarit commun aux pages 400 / 403 / 404 : chaque page remplit les blocs #}
+{% block content %}
+<section class="mx-auto max-w-xl px-6 py-24 text-center">
+
+    <p class="text-7xl font-semibold tracking-tight text-gray-200">{% block code %}{% endblock %}</p>
+
+    <h1 class="mt-6 text-3xl font-semibold tracking-tight">{% block title %}{% endblock %}</h1>
+
+    <p class="mt-4 text-gray-500 leading-relaxed">{% block message %}{% endblock %}</p>
+
+    <div class="mt-10 flex items-center justify-center gap-6 text-sm">
+        <a href="{% url 'blog:post-list' %}" class="text-gray-500 hover:text-black transition-colors">
+            Browse posts
+        </a>
+        <a href="{% url 'core:index' %}" class="rounded-full bg-black px-5 py-2 text-white hover:bg-gray-800 transition-colors">
+            Back to home
+        </a>
+    </div>
+
+</section>
+{% endblock %}
