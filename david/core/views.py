@@ -1,9 +1,11 @@
 from django.contrib.auth import login
 from django.contrib.auth import views as auth_views
-from django.http import HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import reverse_lazy
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_http_methods
 
 from blog.models import Post
 from .forms import (
@@ -27,6 +29,15 @@ def index(request):
     return render(request, 'index.html', {
         'last_posts': last_posts
     })
+
+
+@never_cache
+@require_http_methods(["GET", "HEAD"])
+def ping(request):
+    """Réveil / keep-alive : appelée toutes les ~10 min par un service externe
+    (UptimeRobot, cron-job.org...) pour que Render ne mette pas le serveur en veille.
+    Volontairement ultra légère : pas de template, pas de base de données."""
+    return HttpResponse("pong", content_type="text/plain")
 
 
 def register(request):
